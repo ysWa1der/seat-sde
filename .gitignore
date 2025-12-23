@@ -1,0 +1,24 @@
+# SDE data files
+storage/sde/*.zip
+storage/sde/*.jsonl
+storage/sde/extracted/
+
+# Composer
+vendor/
+composer.lock
+
+# Testing
+.phpunit.cache/
+coverage/
+.phpunit.result.cache
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

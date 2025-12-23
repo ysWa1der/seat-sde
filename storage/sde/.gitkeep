@@ -1,0 +1,2 @@
+# This file ensures the storage/sde directory is tracked by git
+# SDE data files (*.zip, *.jsonl) are excluded via .gitignore
