@@ -1,4 +1,4 @@
-# SeAT Local SDE Plugin
+# SeAT SDE Plugin
 
 This plugin allows SeAT to import SDE (Static Data Export) from **local CCP static data files** in JSONL format, instead of relying on Fuzzwork's MySQL dumps.
 
