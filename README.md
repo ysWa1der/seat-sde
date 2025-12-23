@@ -23,7 +23,7 @@ Fuzzwork SDE stopped updating on July 7, 2025. This plugin provides an alternati
 
 ### 1. Register Plugin
 
-Edit `/home/zkdxh/workspace/eveseat/seat-data/composer.json`:
+Edit `composer.json`:
 
 ```json
 {
