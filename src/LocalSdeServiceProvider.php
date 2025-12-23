@@ -28,6 +28,7 @@ use LocalSde\SeatLocalSde\Commands\InstallPlanetSde;
 use LocalSde\SeatLocalSde\Commands\UpdateAllSde;
 use LocalSde\SeatLocalSde\Commands\UpdatePlanetSde;
 use LocalSde\SeatLocalSde\Commands\UpdateSde;
+use LocalSde\SeatLocalSde\Http\Middleware\InjectSdeUrlScript;
 use Seat\Services\Models\Schedule;
 
 
@@ -38,6 +39,8 @@ use Seat\Services\Models\Schedule;
  * This plugin automatically:
  * - Removes 'eve:update:sde' from scheduler
  * - Adds 'eve:sde:update-all' to scheduler (weekly on Sunday at 3:00 AM)
+ * - Overrides SeAT's SDE version check to use CCP official API instead of Fuzzwork
+ * - Replaces Fuzzwork URL with CCP official URL on settings page
  *
  * Safe to remove: Removing this plugin will restore default Fuzzwork behavior.
  * Note: You may need to manually re-add 'eve:update:sde' to scheduler after removal.
@@ -80,8 +83,26 @@ class LocalSdeServiceProvider extends ServiceProvider
             __DIR__ . '/Config/local-sde.php' => config_path('local-sde.php'),
         ], 'config');
 
+        // Register middleware to inject URL override script
+        $this->app['Illuminate\Contracts\Http\Kernel']
+            ->pushMiddleware(InjectSdeUrlScript::class);
+
         // Automatically manage scheduler: replace eve:update:sde with eve:sde:update-all
         $this->manageScheduler();
+
+        // Register HTTP routes to override SeAT's SDE version check
+        // IMPORTANT: This must be called LAST to ensure routes override core routes
+        $this->registerRoutes();
+    }
+
+    /**
+     * Register HTTP routes to override SeAT core functionality.
+     */
+    private function registerRoutes()
+    {
+        if (!$this->app->routesAreCached()) {
+            include __DIR__ . '/Http/routes.php';
+        }
     }
 
     /**
