@@ -11,7 +11,7 @@ Fuzzwork SDE stopped updating on July 7, 2025. This plugin provides an alternati
 - ✅ **Auto-scheduler management**: Automatically replaces `eve:update:sde` with `eve:sde:update-all` in scheduler
 - ✅ **Self-contained**: All data stored within plugin's `storage/sde` directory
 - ✅ **Safe rollback**: Remove plugin to revert to Fuzzwork SDE
-- ✅ **One-command update**: `eve:sde:update-all` for automatic check + download + install
+- ✅ **One-command update**: `eve:sde:update` for automatic check + download + install
 - ✅ **Modular commands**: Optional separate check, download, and install steps
 - ✅ **Version control**: Download and install specific SDE builds
 - ✅ **YAML output**: Machine-readable output for easy parsing and automation
@@ -52,7 +52,7 @@ php artisan package:discover
 
 **Note:** The plugin will automatically:
 - Remove `eve:update:sde` from the scheduler
-- Add `eve:sde:update-all` to the scheduler (weekly on Sunday at 3:00 AM)
+- Add `eve:sde:update` to the scheduler (weekly on Sunday at 3:00 AM)
 
 To revert, simply remove the plugin and manually re-add `eve:update:sde` to the scheduler.
 
@@ -64,7 +64,7 @@ For most users, simply run:
 
 ```bash
 # Automatically check, download, and install latest SDE (all data, including planet-related)
-php artisan eve:sde:update-all
+php artisan eve:sde:update
 ```
 
 **Note:** `eve:sde:update-all` performs a full SDE update. If you only want to update non-planet related data, use `php artisan eve:sde:update`. If you only want to update planet related data, use `php artisan eve:sde:update-planet`.
@@ -174,7 +174,7 @@ docker exec seat50-basic-front php artisan eve:sde:update-all
 
 **The plugin automatically manages the scheduler!** On installation, it:
 1. Removes `eve:update:sde` from the scheduler
-2. Adds `eve:sde:update-all` to scheduler (weekly on Sunday at 3:00 AM)
+2. Adds `eve:sde:update` to scheduler (weekly on Sunday at 3:00 AM)
 
 You can customize the schedule via SeAT's web UI (Configuration → Schedule) or database:
 
@@ -183,7 +183,7 @@ You can customize the schedule via SeAT's web UI (Configuration → Schedule) or
 -- Recommended for a full SDE update including planet data
 UPDATE schedules
 SET expression = '0 3 * * *'  -- Daily at 3:00 AM
-WHERE command = 'eve:sde:update-all';
+WHERE command = 'eve:sde:update';
 ```
 
 ### Pipeline Integration
@@ -203,7 +203,7 @@ php artisan eve:sde:check | yq '.installed.build_number'
 result=$(php artisan eve:sde:check)
 if echo "$result" | yq -e '.update_available == true' > /dev/null; then
     echo "Update available, downloading..."
-    php artisan eve:sde:update-all
+    php artisan eve:sde:update
 fi
 
 # Download and capture file info
